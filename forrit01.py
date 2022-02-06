@@ -4,7 +4,17 @@ from tkinter import *
 
 import sqlite3
 from sqlite3 import Error
-from venv import create
+
+def createConnectionNewDb(dbFile):
+    conn = None
+    try:
+        conn = sqlite3.connect(dbFile)
+        print(sqlite3.version)
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
 
 def createConnection(dbFile):
     conn = None
@@ -25,7 +35,7 @@ def createTable(conn, createTable):
     return conn
 
 def main():
-    database = r'C:/programinngProjects/newSqliteProject/users.sqlite'
+    database = './users.sqlite'
 
     createUsersTable =   '''CREATE TABLE IF NOT EXISTS users (
                                 id INTEGER PRIMARY KEY,
@@ -78,7 +88,7 @@ def insertGame(conn, game):
     return cur.lastrowid
 
 def masterUserInserter(firstName, lastName):
-    database = r'C:/programinngProjects/newSqliteProject/users.sqlite'
+    database = './users.sqlite'
 
     conn = createConnection(database)
     with conn:
@@ -86,7 +96,7 @@ def masterUserInserter(firstName, lastName):
         insertUser(conn, user)
 
 def masterGameUserInserter(gameId, userId):
-    database = r'C:/programinngProjects/newSqliteProject/users.sqlite'
+    database = './users.sqlite'
 
     conn = createConnection(database)
     with conn:
@@ -94,7 +104,7 @@ def masterGameUserInserter(gameId, userId):
         insertGameUser(conn, ids)
 
 def masterGameInserter(gameName, gameStudio):
-    database = r'C:/programinngProjects/newSqliteProject/users.sqlite'
+    database = './users.sqlite'
 
     conn = createConnection(database)
     with conn:
@@ -133,6 +143,11 @@ def gameHandler():
         print('Error, game studio name is invalid')
     else: masterGameInserter(gameName, gameStudio)
 
+def newDatabase():
+    databaseName = entry07.get()
+    newDatabaseName = './' + databaseName + '.sqlite'
+    createConnectionNewDb(newDatabaseName)
+
 window = Tk()
 window.geometry('300x220')
 
@@ -147,7 +162,7 @@ tab04 = ttk.Frame(masterTab)
 masterTab.add(tab01, text='Users')
 masterTab.add(tab02, text='Users/Games')
 masterTab.add(tab03, text='Games')
-masterTab.add(tab04, text='Tables')
+masterTab.add(tab04, text='Database utilities')
 
 masterTab.pack(expand=1, fill='both')
 #Tab manager [END]
@@ -208,4 +223,11 @@ button03.grid(column=0, row=2, sticky='W')
 #create table tab
 button04 = ttk.Button(tab04, text='Create tables', command=main)
 button04.grid(column=0,row=0)
+
+entry07 = ttk.Entry(tab04)
+entry07.grid(column=1, row=1)
+
+button05 = ttk.Button(tab04, text='Create database', command=newDatabase)
+button05.grid(column=0, row=1)
+
 window.mainloop()
