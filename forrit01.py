@@ -123,8 +123,8 @@ def userHandler():
         masterUserInserter(firstName, lastName)
 
 def gameUserHandler():
-    gameId = entry03.get()
-    userId = entry04.get()
+    gameId = int(entry03.get())
+    userId = int(entry04.get())
 
     if isinstance(gameId, int) != True:
         print('Error, gameId is not a number')
